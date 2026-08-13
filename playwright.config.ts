@@ -13,7 +13,12 @@ export default defineConfig({
   testDir,
   fullyParallel: true,
   retries: process.env.CI ? 1 : 0,
-  reporter: [['list'], ['html', { open: 'never' }]],
+  reporter: [
+  ['list'],
+  ['html', { open: 'never' }],
+  ['./src/support/run-history-reporter.ts'],
+  ['allure-playwright', { resultsDir: 'allure-results' }],
+],
   use: {
     baseURL: process.env.BASE_URL,
     trace: 'on-first-retry',

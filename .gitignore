@@ -10,3 +10,5 @@ node_modules/
 .auth/
 .env
 data/
+allure-results/
+allure-report/

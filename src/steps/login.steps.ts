@@ -8,7 +8,7 @@ Given('I am on the login page', async ({ loginPage }) => {
 });
 
 When('I sign in with valid credentials', async ({ loginPage }) => {
-  await loginPage.login(process.env.USER_EMAIL!, process.env.USER_PASSWORD!);
+  await loginPage.login(process.env.AUTH_USER_EMAIL!, process.env.AUTH_USER_PASSWORD!);
 });
 
 When(
@@ -19,9 +19,7 @@ When(
 );
 
 Then('I should see my username in the navigation bar', async ({ page }) => {
-  await expect(
-    page.getByRole('link', { name: process.env.USER_NAME! })
-  ).toBeVisible();
+  await expect(page.getByRole('link', { name: process.env.AUTH_USER_NAME! })).toBeVisible();
 });
 
 Then('I should see a login error message', async ({ loginPage }) => {
