@@ -15,9 +15,38 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: 'https://demo.realworld.show',
+    baseURL: process.env.BASE_URL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+projects: [
+  {
+    name: 'setup',
+    testDir: './src/support',
+    testMatch: /global\.setup\.ts/,
+  },
+  {
+    name: 'api',
+    testDir,
+    testMatch: /api-.*\.feature\.spec\.js/,
+  },
+  {
+    name: 'auth-ui',
+    testDir,
+    testMatch: /login\.feature\.spec\.js/,
+    use: { ...devices['Desktop Chrome'] },
+  },
+  {
+    name: 'chromium',
+    testDir,
+    testIgnore: /(login|api-.*)\.feature\.spec\.js/,
+    use: {
+      ...devices['Desktop Chrome'],
+      storageState: '.auth/user.json',
+    },
+    dependencies: ['setup'],
+  },
+],
+
+
 });
