@@ -8,6 +8,9 @@ export class ArticlePage {
   readonly tagsInput: Locator;
   readonly publishButton: Locator;
   readonly articleTitle: Locator;
+  readonly editButton: Locator;
+  readonly deleteButton: Locator;
+  readonly articleBody: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -17,6 +20,9 @@ export class ArticlePage {
     this.tagsInput = page.getByPlaceholder('Enter tags');
     this.publishButton = page.getByRole('button', { name: 'Publish Article' });
     this.articleTitle = page.locator('.banner h1');
+    this.editButton = page.getByRole('link', { name: 'Edit Article' }).first();
+    this.deleteButton = page.getByRole('button', { name: 'Delete Article' }).first();
+    this.articleBody = page.locator('.article-content');
   }
 
   async gotoEditor(): Promise<void> {
@@ -30,5 +36,18 @@ export class ArticlePage {
     await this.tagsInput.fill(tag);
     await this.tagsInput.press('Enter');
     await this.publishButton.click();
+  }
+  async gotoArticle(slug: string): Promise<void> {
+    await this.page.goto(`/article/${slug}`);
+  }
+
+  async updateTitle(newTitle: string): Promise<void> {
+    await this.editButton.click();
+    await this.titleInput.fill(newTitle);
+    await this.publishButton.click();
+  }
+
+  async deleteArticle(): Promise<void> {
+    await this.deleteButton.click();
   }
 }

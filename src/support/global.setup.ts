@@ -4,16 +4,24 @@ import fs from 'fs';
 const AUTH_FILE = '.auth/user.json';
 
 setup('authenticate via API', async ({ request }) => {
-  const response = await request.post(`${process.env.API_URL}/users/login`, {
-    data: {
-      user: {
-        email: process.env.USER_EMAIL!,
-        password: process.env.USER_PASSWORD!,
-      },
-    },
+  const email = process.env.USER_EMAIL!;
+  const password = process.env.USER_PASSWORD!;
+  const username = process.env.USER_NAME!;
+
+  let response = await request.post(`${process.env.API_URL}/users/login`, {
+    data: { user: { email, password } },
   });
 
-  expect(response.ok()).toBeTruthy();
+  if (!response.ok()) {
+    response = await request.post(`${process.env.API_URL}/users`, {
+      data: { user: { username, email, password } },
+    });
+  }
+
+  expect(
+    response.ok(),
+    `Could not log in or register ${email}: ${response.status()}`
+  ).toBeTruthy();
 
   const body = await response.json();
   const token: string = body.user.token;
