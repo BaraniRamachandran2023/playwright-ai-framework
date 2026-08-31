@@ -19,7 +19,10 @@ When(
 );
 
 Then('I should see my username in the navigation bar', async ({ page }) => {
-  await expect(page.getByRole('link', { name: process.env.AUTH_USER_NAME! })).toBeVisible();
+ // await expect(page.getByRole('link', { name: process.env.AUTH_USER_NAME! })).toBeVisible();
+  await expect(
+  page.getByRole('link', { name: process.env.AUTH_USER_NAME! }).first()
+).toBeVisible();
 });
 
 Then('I should see a login error message', async ({ loginPage }) => {
