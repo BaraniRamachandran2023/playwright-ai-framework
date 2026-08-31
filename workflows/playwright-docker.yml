@@ -1,0 +1,53 @@
+name: Playwright Tests (Docker)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-in-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Build the Docker image from your Dockerfile
+      - name: Build Docker Image
+        run: |
+          docker build -t playwright-framework:ci .
+
+      # 3. Create local report directories on the CI runner
+      - name: Create Report Directories
+        run: |
+          mkdir -p playwright-report allure-results
+
+      # 4. Run tests inside the container with volume mounts
+      - name: Run Playwright Tests in Docker
+        run: |
+          docker run --rm \
+            -v $(pwd)/playwright-report:/app/playwright-report \
+            -v $(pwd)/allure-results:/app/allure-results \
+            playwright-framework:ci npm run test -- src/features/article-crud.feature --reporter=html
+        continue-on-error: true
+
+      # 5. Upload Playwright HTML Report as a pipeline artifact
+      - name: Upload Playwright HTML Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-html-report
+          path: playwright-report/
+          retention-days: 14
+
+      # 6. Upload Allure Results as a pipeline artifact
+      - name: Upload Allure Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 14

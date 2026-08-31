@@ -22,3 +22,8 @@ When('I publish an article with a unique title', async ({ articlePage }) => {
 Then('I should land on the published article page', async ({ articlePage }) => {
   await expect(articlePage.articleTitle).toHaveText(articleTitle);
 });
+
+Then('The article page should meet WCAG accessibility standards', async ({ makeAxeBuilder }) => {
+  const results = await makeAxeBuilder().analyze();
+  expect(results.violations).toEqual([]);
+});

@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test:dev": "cross-env TEST_ENV=dev bddgen && playwright test",
+    "test:staging": "cross-env TEST_ENV=staging bddgen && playwright test",
+    "test:prod": "cross-env TEST_ENV=prod bddgen && playwright test",
     "bddgen": "bddgen",
     "test": "bddgen && playwright test",
     "test:headed": "bddgen && playwright test --headed",
@@ -14,10 +17,13 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.62.1",
     "@types/node": "^26.2.0",
     "allure-playwright": "^3.10.2",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.4.2",
-    "playwright-bdd": "^9.2.0"
+    "playwright-bdd": "^9.2.0",
+    "typescript": "^7.0.2"
   }
 }

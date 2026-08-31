@@ -1,3 +1,5 @@
+//import { env } from './src/config/env';
+import './src/config/env'; 
 import { defineConfig, devices } from "@playwright/test";
 import { defineBddConfig } from "playwright-bdd";
 import dotenv from "dotenv";
@@ -20,7 +22,9 @@ export default defineConfig({
     ["allure-playwright", { resultsDir: "allure-results" }],
   ],
   use: {
-    baseURL: process.env.BASE_URL,
+   baseURL: process.env.BASE_URL,
+   headless: true,
+   //baseURL: env.baseURL,
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
